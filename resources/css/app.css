@@ -1,0 +1,185 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', 'Segoe UI', ui-sans-serif,
+        system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+
+    --color-ink: #1d1d1f;
+    --color-ink-2: #424245;
+    --color-muted: #6e6e73;
+    --color-paper: #fbfbfd;
+    --color-mist: #f5f5f7;
+    --color-fog: #e8e8ed;
+    --color-line: #d2d2d7;
+    --color-action: #0071e3;
+    --color-link: #0066cc;
+    --color-tiger: #e0862c;
+    --color-eyebrow: #b64400;
+
+    --color-good: #1a7f37;
+    --color-good-soft: #e8f5ec;
+    --color-warn: #8a5a00;
+    --color-warn-soft: #fff4d6;
+    --color-bad: #c0322b;
+    --color-bad-soft: #fdeceb;
+    --color-info: #0b4a99;
+    --color-info-soft: #e8f0fc;
+    --color-confirm: #6b3fb5;
+    --color-confirm-soft: #f1eafb;
+
+    --radius-tile: 28px;
+    --radius-card: 20px;
+}
+
+@layer base {
+    html {
+        -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+        @apply bg-paper font-sans text-ink;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@utility glass {
+    background: rgb(251 251 253 / 0.82);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+@utility case-art {
+    background: repeating-linear-gradient(118deg, #e38a2c 0 26px, #1b0f07 26px 40px, #e9953a 40px 70px, #1b0f07 70px 80px);
+}
+
+@utility case-art-sm {
+    background: repeating-linear-gradient(118deg, #e38a2c 0 8px, #1b0f07 8px 12px);
+}
+
+/* Landing page hero: phones behind the torn paper (components/store/tear-reveal). --spread goes 0 → 1 while scrolling. */
+.tear-rig {
+    --spread: 1;
+    --phone-height: min(44svh, 60vw);
+    transform-origin: 50% 60%;
+    will-change: transform;
+}
+
+.tear-phone {
+    position: relative;
+    flex-shrink: 0;
+    height: var(--phone-height);
+    box-shadow: 0 40px 70px rgb(0 0 0 / 0.55);
+}
+
+.tear-phone-center {
+    z-index: 2;
+}
+
+.tear-phone-left,
+.tear-phone-right {
+    z-index: 1;
+    height: calc(var(--phone-height) * 0.9);
+}
+
+.tear-phone-left {
+    margin-right: calc(var(--phone-height) * -0.16);
+    transform: translateX(calc(var(--spread) * -22%)) translateY(6%) rotate(calc(var(--spread) * -11deg));
+}
+
+.tear-phone-right {
+    margin-left: calc(var(--phone-height) * -0.16);
+    transform: translateX(calc(var(--spread) * 22%)) translateY(6%) rotate(calc(var(--spread) * 11deg));
+}
+
+/* Landing page: bare phone turns in 3D, a Lahiya case slides on and off (components/store/hero-phone). */
+.hero-phone {
+    perspective: 1400px;
+}
+
+.hero-phone-rig {
+    transform-style: preserve-3d;
+    animation: hero-phone-turn 9s ease-in-out infinite;
+}
+
+.hero-phone-body {
+    box-shadow: 0 30px 60px rgb(0 0 0 / 0.22);
+}
+
+/* Darker copy behind the back panel, so the phone shows its thickness while it turns. */
+.hero-phone-edge {
+    transform: translateZ(-9px);
+    filter: brightness(0.62);
+}
+
+.hero-phone-case {
+    filter: drop-shadow(0 18px 24px rgb(0 0 0 / 0.16));
+    animation: hero-phone-case 9s cubic-bezier(0.22, 0.8, 0.26, 1) infinite;
+}
+
+.hero-phone-label-bare {
+    animation: hero-phone-label-bare 9s ease infinite;
+}
+
+.hero-phone-label-case {
+    animation: hero-phone-label-case 9s ease infinite;
+}
+
+.hero-phone-dot {
+    animation: hero-phone-dot 9s ease infinite;
+}
+
+@keyframes hero-phone-turn {
+    0%, 100% { transform: rotateY(-18deg) rotateX(6deg); }
+    50% { transform: rotateY(14deg) rotateX(3deg); }
+}
+
+@keyframes hero-phone-case {
+    0%, 14% { transform: translate3d(0, 62%, 140px) rotateX(-22deg); opacity: 0; }
+    20% { opacity: 1; }
+    36%, 78% { transform: translate3d(0, 0, 6px) rotateX(0deg); opacity: 1; }
+    86% { opacity: 1; }
+    94%, 100% { transform: translate3d(0, 62%, 140px) rotateX(-22deg); opacity: 0; }
+}
+
+@keyframes hero-phone-label-bare {
+    0%, 26%, 88%, 100% { opacity: 1; }
+    32%, 82% { opacity: 0; }
+}
+
+@keyframes hero-phone-label-case {
+    0%, 26%, 88%, 100% { opacity: 0; }
+    32%, 82% { opacity: 1; }
+}
+
+@keyframes hero-phone-dot {
+    0%, 26%, 88%, 100% { background: #86868b; }
+    32%, 82% { background: var(--color-good); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-phone-rig,
+    .hero-phone-case,
+    .hero-phone-label-bare,
+    .hero-phone-label-case,
+    .hero-phone-dot {
+        animation: none;
+    }
+
+    .hero-phone-rig {
+        transform: rotateY(-10deg) rotateX(4deg);
+    }
+
+    .hero-phone-label-bare {
+        opacity: 0;
+    }
+
+    .hero-phone-dot {
+        background: var(--color-good);
+    }
+}
